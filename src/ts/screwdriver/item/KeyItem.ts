@@ -1,11 +1,11 @@
 import { Module } from '../module/Module';
-import { BooleanProperty, BooleanPropertyJson, IntProperty, IntPropertyJson } from '../util/Property';
 import { BaseItem, ItemJson } from './BaseItem';
 
 export class KeyItem extends BaseItem<KeyItem> {
-    readonly digitalPadlock = new BooleanProperty();
-    readonly padlock = new BooleanProperty();
-    readonly numberOfKey = new IntProperty();
+    digitalPadlock: boolean;
+    padlock: boolean;
+    /** int */
+    numberOfKey: number;
 
     constructor(module: Module, json: KeyJson) {
         super(module);
@@ -14,58 +14,49 @@ export class KeyItem extends BaseItem<KeyItem> {
 
     load(json: KeyJson): void {
         super.load(json);
-        this.digitalPadlock.load(json.digitalPadlock);
-        this.padlock.load(json.padlock);
-        this.numberOfKey.load(json.numberOfKey);
+        this.digitalPadlock = json.digitalPadlock;
+        this.padlock = json.padlock;
+        this.numberOfKey = json.numberOfKey;
     }
 
     save(): KeyJson {
         const json = super.save() as KeyJson;
-        json.digitalPadlock = this.digitalPadlock.save();
-        json.padlock = this.padlock.save();
-        json.numberOfKey = this.numberOfKey.save();
+        json.digitalPadlock = this.digitalPadlock;
+        json.padlock = this.padlock;
+        json.numberOfKey = this.numberOfKey;
         return json;
     }
 
     getDigitalPadlock(): boolean | null {
-        if (this.digitalPadlock.getState() === 'inherit' && this.hasParent()) {
-            return this.getParent().getDigitalPadlock();
-        } else {
-            return this.digitalPadlock.get();
-        }
+        if (this.digitalPadlock == null) return this.hasParent() ? this.getParent().getDigitalPadlock() : null;
+        else return this.digitalPadlock;
     }
 
     setDigitalPadlock(digitalPadlock: boolean) {
-        this.digitalPadlock.set(digitalPadlock);
+        this.digitalPadlock = digitalPadlock;
     }
 
     getPadlock(): boolean | null {
-        if (this.padlock.getState() === 'inherit' && this.hasParent()) {
-            return this.getParent().getPadlock();
-        } else {
-            return this.padlock.get();
-        }
+        if (this.padlock == null) return this.hasParent() ? this.getParent().getPadlock() : null;
+        else return this.padlock;
     }
 
     setPadlock(padlock: boolean) {
-        this.padlock.set(padlock);
+        this.padlock = padlock;
     }
 
     getNumberOfKey(): number | null {
-        if (this.numberOfKey.getState() === 'inherit' && this.hasParent()) {
-            return this.getParent().getNumberOfKey();
-        } else {
-            return this.numberOfKey.get();
-        }
+        if (this.numberOfKey == null) return this.hasParent() ? this.getParent().getNumberOfKey() : null;
+        else return this.numberOfKey;
     }
 
     setNumberOfKey(numberOfKey: number) {
-        this.numberOfKey.set(numberOfKey);
+        this.numberOfKey = Math.round(numberOfKey);
     }
 }
 
 export type KeyJson = ItemJson & {
-    digitalPadlock: BooleanPropertyJson;
-    padlock: BooleanPropertyJson;
-    numberOfKey: IntPropertyJson;
+    digitalPadlock: boolean;
+    padlock: boolean;
+    numberOfKey: number;
 };

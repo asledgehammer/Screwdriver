@@ -1,7 +1,6 @@
 import { Module } from '../module/Module';
 import { Compilable } from '../util/Compilable';
 import { Inheritable } from '../util/Inheritable';
-import { StringProperty, StringPropertyJson } from '../util/Property';
 import { ItemType } from './ItemType';
 
 export abstract class BaseItem<IType extends BaseItem<IType>> implements Inheritable<IType>, Compilable {
@@ -12,8 +11,8 @@ export abstract class BaseItem<IType extends BaseItem<IType>> implements Inherit
     private _parentID: string;
 
     // Item Properties
-    readonly displayName = new StringProperty();
-    readonly icon = new StringProperty();
+    displayName: string;
+    icon: string;
 
     protected constructor(module: Module) {
         this.module = module;
@@ -21,8 +20,8 @@ export abstract class BaseItem<IType extends BaseItem<IType>> implements Inherit
 
     load(json: ItemJson): void {
         this.id = json.id;
-        this.displayName.load(json.displayName);
-        this.icon.load(json.icon);
+        this.displayName = json.displayName;
+        this.icon = json.icon;
     }
 
     save(): ItemJson {
@@ -30,37 +29,31 @@ export abstract class BaseItem<IType extends BaseItem<IType>> implements Inherit
             id: this.id,
             parentID: this._parentID,
             type: 'Key',
-            displayName: this.displayName.save(),
-            icon: this.icon.save(),
+            displayName: this.displayName,
+            icon: this.icon,
         };
     }
 
     compile(prefix: string): string {
-        return '';
+        return prefix;
     }
 
     getDisplayName(): string | null {
-        if (this.displayName.getState() === 'inherit' && this.hasParent()) {
-            return this._parent.getDisplayName();
-        } else {
-            return this.displayName.get();
-        }
+        if (this.displayName == null) return this.hasParent() ? this.getParent().getDisplayName() : null;
+        else return this.displayName;
     }
 
     setDisplayName(displayName: string) {
-        this.displayName.set(displayName);
+        this.displayName = displayName;
     }
 
     getIcon(): string | null {
-        if (this.icon.getState() === 'inherit' && this.hasParent()) {
-            return this._parent.getIcon();
-        } else {
-            return this.icon.get();
-        }
+        if (this.icon == null) return this.hasParent() ? this.getParent().getIcon() : null;
+        else return this.icon;
     }
 
     setIcon(icon: string) {
-        this.icon.set(icon);
+        this.icon = icon;
     }
 
     getParent(): IType {
@@ -85,6 +78,6 @@ export type ItemJson = {
     id: string;
     parentID: string;
     type: ItemType;
-    displayName: StringPropertyJson;
-    icon: StringPropertyJson;
+    displayName: string;
+    icon: string;
 };

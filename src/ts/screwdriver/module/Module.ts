@@ -4,7 +4,6 @@ import { Project } from '../project/Project';
 import { BaseRecipe, RecipeJson } from '../recipe/BaseRecipe';
 
 export class Module {
-
     project: Project;
     id: string;
 
@@ -57,15 +56,27 @@ export class Module {
         // Resolve items.
         for (const item of Object.values(this.items)) {
             const parentID = item.getParentID();
-            if(parentID != null) {
-                item.setParent(this.items[parentID]);
+            if (parentID != null) {
+                const parent = this.project.getItem(parentID);
+                if (parent == null) {
+                    console.warn(`[${this.id}]: The item '${item.id}' cannot find its parent item '${parentID}'.`);
+                    continue;
+                }
+                item.setParent(parent);
             }
         }
         // Resolve recipes.
         for (const recipe of Object.values(this.recipes)) {
             const parentID = recipe.getParentID();
-            if(parentID != null) {
-                recipe.setParent(this.recipes[parentID]);
+            if (parentID != null) {
+                const parent = this.project.getRecipe(parentID);
+                if (parent == null) {
+                    console.warn(
+                        `[${this.id}]: The recipe '${recipe.id}' cannot find its parent recipe '${parentID}'.`
+                    );
+                    continue;
+                }
+                recipe.setParent(parent);
             }
         }
     }
