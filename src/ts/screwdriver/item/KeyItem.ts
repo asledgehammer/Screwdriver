@@ -7,9 +7,9 @@ export class KeyItem extends BaseItem<KeyItem> {
     /** int */
     numberOfKey: number;
 
-    constructor(module: Module, json: KeyJson) {
+    constructor(module: Module, json?: KeyJson) {
         super(module);
-        this.load(json);
+        if(json != null) this.load(json);
     }
 
     load(json: KeyJson): void {
@@ -25,6 +25,10 @@ export class KeyItem extends BaseItem<KeyItem> {
         json.padlock = this.padlock;
         json.numberOfKey = this.numberOfKey;
         return json;
+    }
+
+    override compile(prefix: string): string {
+        return prefix;
     }
 
     getDigitalPadlock(): boolean | null {
