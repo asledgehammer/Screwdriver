@@ -1,15 +1,20 @@
 import { BaseItem, ItemJson } from '../item/BaseItem';
 import { KeyItem, KeyJson } from '../item/KeyItem';
+import { Project } from '../project/Project';
 import { BaseRecipe, RecipeJson } from '../recipe/BaseRecipe';
 
 export class Module {
-    items: { [id: string]: BaseItem<any> } = {};
-    recipes: { [id: string]: BaseRecipe<any> } = {};
+
+    project: Project;
     id: string;
 
-    constructor(id: string, json?: ModuleJson) {
+    // Module contents
+    items: { [id: string]: BaseItem<any> } = {};
+    recipes: { [id: string]: BaseRecipe<any> } = {};
+
+    constructor(project: Project, id: string) {
+        this.project = project;
         this.id = id;
-        if (json != null) this.load(json);
     }
 
     load(json: ModuleJson): void {
@@ -26,7 +31,7 @@ export class Module {
                     break;
                 }
                 default: {
-                    console.error(`[${this.id}]: Unknown Item type: {name: '${item.name}', type: '${item.type}'}`);
+                    console.error(`[${this.id}]: Unknown Item type: {id: '${item.id}', type: '${item.type}'}`);
                 }
             }
         }
@@ -42,10 +47,35 @@ export class Module {
         const items: { [id: string]: ItemJson } = {};
         const recipes: { [id: string]: RecipeJson } = {};
 
-        for (const item of Object.values(this.items)) items[item.name] = item.save();
+        for (const item of Object.values(this.items)) items[item.id] = item.save();
         for (const recipe of Object.values(this.recipes)) recipes[recipe.id] = recipe.save();
 
         return { id, items, recipes };
+    }
+
+    resolveContents() {
+        // Resolve items.
+        for (const item of Object.values(this.items)) {
+            const parentID = item.getParentID();
+            if(parentID != null) {
+                item.setParent(this.items[parentID]);
+            }
+        }
+        // Resolve recipes.
+        for (const recipe of Object.values(this.recipes)) {
+            const parentID = recipe.getParentID();
+            if(parentID != null) {
+                recipe.setParent(this.recipes[parentID]);
+            }
+        }
+    }
+
+    getItem(id: string): BaseItem<any> | null {
+        return this.items[id];
+    }
+
+    getRecipe(id: string): BaseRecipe<any> | null {
+        return this.recipes[id];
     }
 }
 
