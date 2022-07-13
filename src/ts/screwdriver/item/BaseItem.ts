@@ -1,6 +1,7 @@
 import { Module } from '../module/Module';
 import { Compilable } from '../util/Compilable';
 import { Inheritable } from '../util/Inheritable';
+import { float, int } from '../util/JavaTypes';
 import { ItemType } from './ItemType';
 
 export abstract class BaseItem<IType extends BaseItem<IType>> implements Inheritable<IType>, Compilable {
@@ -11,8 +12,72 @@ export abstract class BaseItem<IType extends BaseItem<IType>> implements Inherit
     private _parentID: string;
 
     // Item Properties
+    RequireInHandOrInventory: string[] = null;
+    attachmentsProvided: string[] = null;
+    IconsForTexture: string[] = null;
+
+    AmmoType: string = null;
+    CustomContextMenu: string = null;
+    CloseKillMove: string = null;
+    DisplayCategory: string = null;
+    GunType: string = null;
+    ReplaceOnUse: string = null;
+    ReplaceOnUseOn: string = null;
+    Tooltip: string = null;
+    attachmentReplacement: string = null;
+    attachmentType: string = null;
+    breakSound: string = null;
+    countDownSound: string = null;
     displayName: string;
+    evolvedRecipeName: string = null;
+    explosionSound: string = null;
     icon: string;
+    itemWhenDry: string = null;
+
+    ActualWeight: float = 1.0;
+    BoredomChange: float = 0.0;
+    FatigueChange: float = 0.0;
+    LightStrength: float = 0.0;
+    LightDistance: float = 0.0;
+    ReduceInfectionPower: float = 0.0;
+    StressChange: float = 0.0;
+    UnhappyChange: float = 0.0;
+    Weight: float = 1.0;
+    alcoholPower: float = 0.0;
+    bandagePower: float = 0.0;
+    brakeForce: float = 0.0;
+    conditionLowerNormal: float = 0.0;
+    conditionLowerOffroad: float = 0.0;
+    engineLoudness: float = 0.0;
+    metalValue: float = 0.0;
+    suspensionCompression: float = 0.0;
+    suspensionDamping: float = 0.0;
+    wetCooldown: float = 0.0;
+    wheelFriction: float = 0.0;
+
+    Condition: int = 10;
+    ConditionMax: int = 10;
+    Count: int = 1;
+    chanceToSpawnDamaged: int = 0;
+    colorRed: int = 255;
+    colorGreen: int = 255;
+    colorBlue: int = 255;
+    itemCapacity: int = -1;
+    maxAmmo: int = 0;
+    maxCapacity: int = -1;
+    remoteRange: int = 0;
+
+    ActivatedItem: boolean = false;
+    Alcoholic: boolean = false;
+    CanStack: boolean = true;
+    CanStoreWater: boolean = false;
+    IsWaterSource: boolean = false;
+    TorchCone: boolean = false;
+    RequiresEquippedBothHands: boolean = false;
+    canBeRemote: boolean = false;
+    isWet: boolean = false;
+    keepOnDeplete: boolean = false;
+    remoteController: boolean = false;
 
     protected constructor(module: Module) {
         this.module = module;
