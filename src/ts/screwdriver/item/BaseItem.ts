@@ -1,20 +1,42 @@
 import { Module } from '../module/Module';
+import { Compilable } from '../util/Compilable';
 import { Inheritable } from '../util/Inheritable';
 import { StringProperty, StringPropertyJson } from '../util/Property';
 import { ItemType } from './ItemType';
 
-export abstract class BaseItem<IType extends BaseItem<IType>> implements Inheritable<IType> {
-    private _parent: IType;
-    readonly type: string;
+export abstract class BaseItem<IType extends BaseItem<IType>> implements Inheritable<IType>, Compilable {
     module: Module;
     id: string;
+    readonly type: string;
+    private _parent: IType;
+    private _parentID: string;
 
     // Item Properties
     readonly displayName = new StringProperty();
     readonly icon = new StringProperty();
 
-    constructor(module: Module) {
+    protected constructor(module: Module) {
         this.module = module;
+    }
+
+    load(json: ItemJson): void {
+        this.id = json.id;
+        this.displayName.load(json.displayName);
+        this.icon.load(json.icon);
+    }
+
+    save(): ItemJson {
+        return {
+            id: this.id,
+            parentID: this._parentID,
+            type: 'Key',
+            displayName: this.displayName.save(),
+            icon: this.icon.save(),
+        };
+    }
+
+    compile(prefix: string): string {
+        return '';
     }
 
     getDisplayName(): string | null {
@@ -47,30 +69,21 @@ export abstract class BaseItem<IType extends BaseItem<IType>> implements Inherit
 
     setParent(parent: IType) {
         this._parent = parent;
+        this._parentID = parent != null ? parent.id : null;
+    }
+
+    getParentID(): string {
+        return this._parentID;
     }
 
     hasParent(): boolean {
         return this._parent != null;
     }
-
-    load(json: ItemJson): void {
-        this.id = json.id;
-        this.displayName.load(json.displayName);
-        this.icon.load(json.icon);
-    }
-
-    save(): ItemJson {
-        return {
-            id: this.id,
-            type: 'Key',
-            displayName: this.displayName.save(),
-            icon: this.icon.save(),
-        };
-    }
 }
 
 export type ItemJson = {
     id: string;
+    parentID: string;
     type: ItemType;
     displayName: StringPropertyJson;
     icon: StringPropertyJson;

@@ -43,7 +43,7 @@ export class Module {
         const recipes: { [id: string]: RecipeJson } = {};
 
         for (const item of Object.values(this.items)) items[item.name] = item.save();
-        for (const recipe of Object.values(this.recipes)) recipes[recipe.name] = recipe.save();
+        for (const recipe of Object.values(this.recipes)) recipes[recipe.id] = recipe.save();
 
         return { id, items, recipes };
     }
