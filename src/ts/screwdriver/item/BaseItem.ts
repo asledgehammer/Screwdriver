@@ -1,19 +1,26 @@
+import { Module } from "../Module";
 import { ItemType } from "./ItemType";
 
 export abstract class BaseItem<Json extends ItemJson> {
     
     readonly type: ItemType;
-    module: string;
+    module: Module;
     displayName: string;
     name: string;
     icon: string;
 
-    constructor(type: ItemType, module: string, displayName: string, name: string, icon: string) {
-        this.type = type;
+    constructor(module: Module, typeOrJson: ItemType | Json, name?: string, displayName?: string, icon?: string) {
+
         this.module = module;
-        this.displayName = displayName;
-        this.name = name;
-        this.icon = icon;
+        
+        if(typeof typeOrJson === 'string') {
+            this.type = typeOrJson;
+            this.displayName = displayName;
+            this.name = name;
+            this.icon = icon;            
+        } else {
+            this.load(typeOrJson);
+        }
     }
 
     abstract load(json: ItemJson): void;
@@ -22,7 +29,6 @@ export abstract class BaseItem<Json extends ItemJson> {
 
 export type ItemJson = {
     type: ItemType;
-    module: string;
     displayName: string;
     name: string;
     icon: string;
