@@ -1,4 +1,4 @@
-import { ItemType } from "./item/ItemType";
+import { ItemType } from "./screwdriver/item/ItemType";
 
 export class Item {
     clothingExtraSubmenu: string = null;

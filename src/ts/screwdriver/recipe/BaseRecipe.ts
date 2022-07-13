@@ -1,18 +1,18 @@
-import { Module } from "../Module";
+import { Module } from "../module/Module";
 
 export abstract class BaseRecipe<Json extends RecipeJson> {
 
     module: Module;
-    id: string;
+    name: string;
 
-    constructor(module: Module, idOrJson: Json | string) {
+    constructor(module: Module, nameOrJson: Json | string) {
 
         this.module = module;
 
-        if (typeof idOrJson === 'string') {
-            this.id = idOrJson;
+        if (typeof nameOrJson === 'string') {
+            this.name = nameOrJson;
         } else {
-            this.load(idOrJson);
+            this.load(nameOrJson);
         }
     }
 
@@ -21,5 +21,5 @@ export abstract class BaseRecipe<Json extends RecipeJson> {
 }
 
 export type RecipeJson = {
-    id: string;
+    name: string;
 }

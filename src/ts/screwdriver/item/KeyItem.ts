@@ -1,50 +1,71 @@
-import { BaseItem, ItemJson } from "./BaseItem";
+import { Module } from '../module/Module';
+import { BooleanProperty, BooleanPropertyJson, IntProperty, IntPropertyJson } from '../util/Property';
+import { BaseItem, ItemJson } from './BaseItem';
 
-export class KeyItem extends BaseItem<KeyJson> {
+export class KeyItem extends BaseItem<KeyItem> {
+    readonly digitalPadlock = new BooleanProperty();
+    readonly padlock = new BooleanProperty();
+    readonly numberOfKey = new IntProperty();
 
-    digitalPadlock: boolean = false;
-    padlock: boolean = false;
-    numberOfKey: number = 0;
-
-    constructor(module: string, displayName: string, name: string, icon: string) {
-        super('Key', module, displayName, name, icon);
+    constructor(module: Module, json: KeyJson) {
+        super(module);
+        this.load(json);
     }
 
     load(json: KeyJson): void {
-        
-        // ItemJson
-        this.module = json.module;
-        this.displayName = json.displayName;
-        this.name = json.name;
-        this.icon = json.icon;
-
-        // KeyJson
-        this.digitalPadlock = json.digitalPadlock;
-        this.padlock = json.padlock;
-        this.numberOfKey = json.numberOfKey;
+        super.load(json);
+        this.digitalPadlock.load(json.digitalPadlock);
+        this.padlock.load(json.padlock);
+        this.numberOfKey.load(json.numberOfKey);
     }
 
     save(): KeyJson {
-         return {
-
-            // ItemJson
-            type: this.type,
-            module: this.module,
-            displayName: this.displayName,
-            name: this.name,
-            icon: this.icon,
-
-            // KeyJson
-            digitalPadlock: this.digitalPadlock,
-            padlock: this.padlock,
-            numberOfKey: this.numberOfKey
-        };
+        const json = super.save() as KeyJson;
+        json.digitalPadlock = this.digitalPadlock.save();
+        json.padlock = this.padlock.save();
+        json.numberOfKey = this.numberOfKey.save();
+        return json;
     }
 
+    getDigitalPadlock(): boolean | null {
+        if (this.digitalPadlock.getState() === 'inherit' && this.hasParent()) {
+            return this.getParent().getDigitalPadlock();
+        } else {
+            return this.digitalPadlock.get();
+        }
+    }
+
+    setDigitalPadlock(digitalPadlock: boolean) {
+        this.digitalPadlock.set(digitalPadlock);
+    }
+
+    getPadlock(): boolean | null {
+        if (this.padlock.getState() === 'inherit' && this.hasParent()) {
+            return this.getParent().getPadlock();
+        } else {
+            return this.padlock.get();
+        }
+    }
+
+    setPadlock(padlock: boolean) {
+        this.padlock.set(padlock);
+    }
+
+    getNumberOfKey(): number | null {
+        if (this.numberOfKey.getState() === 'inherit' && this.hasParent()) {
+            return this.getParent().getNumberOfKey();
+        } else {
+            return this.numberOfKey.get();
+        }
+    }
+
+    setNumberOfKey(numberOfKey: number) {
+        this.numberOfKey.set(numberOfKey);
+    }
 }
 
 export type KeyJson = ItemJson & {
-    digitalPadlock: boolean;
-    padlock: boolean;
-    numberOfKey: number;
+    digitalPadlock: BooleanPropertyJson;
+    padlock: BooleanPropertyJson;
+    numberOfKey: IntPropertyJson;
 };
