@@ -16,7 +16,6 @@ export class KeyItem extends BaseItem<KeyItem> {
 
     load(json: KeyJson): void {
         super.load(json);
-
         this.digitalPadlock.value = json.digitalPadlock;
         this.padlock.value = json.padlock;
         this.numberOfKey.value = json.numberOfKey;
@@ -32,33 +31,6 @@ export class KeyItem extends BaseItem<KeyItem> {
 
     override compile(prefix: string): string {
         return prefix;
-    }
-
-    getDigitalPadlock(): boolean | null {
-        if (this.digitalPadlock == null) return this.hasParent() ? this.getParent().getDigitalPadlock() : null;
-        else return this.digitalPadlock;
-    }
-
-    setDigitalPadlock(digitalPadlock: boolean) {
-        this.digitalPadlock = digitalPadlock;
-    }
-
-    getPadlock(): boolean | null {
-        if (this.padlock == null) return this.hasParent() ? this.getParent().getPadlock() : null;
-        else return this.padlock;
-    }
-
-    setPadlock(padlock: boolean) {
-        this.padlock = padlock;
-    }
-
-    getNumberOfKey(): number | null {
-        if (this.numberOfKey == null) return this.hasParent() ? this.getParent().getNumberOfKey() : null;
-        else return this.numberOfKey;
-    }
-
-    setNumberOfKey(numberOfKey: number) {
-        this.numberOfKey = Math.round(numberOfKey);
     }
 }
 
