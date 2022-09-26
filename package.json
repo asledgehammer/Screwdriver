@@ -16,7 +16,7 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "electron": "^19.0.8",
-    "eslint": "^7.32.0",
+    "eslint": "^8.24.0",
     "grunt": "^1.5.3",
     "grunt-contrib-sass": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
