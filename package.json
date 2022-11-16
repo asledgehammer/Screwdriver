@@ -20,7 +20,7 @@
     "grunt": "^1.5.3",
     "grunt-contrib-sass": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "typescript": "^4.7.2"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "npm": "^8.13.2"
